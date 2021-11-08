@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    </script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet"> 
+    <link href="./CSS/mls.css" rel="stylesheet">
+    
+  </head>
+
+  <body>
+    <div class="body">
+    <div class="background">
+      <div class="form">
+        <h4>Let’s find a home that’s perfect for you</h4><br />
+        <div class="container">
+            <div id="photosArea"></div>
+          </div>
+        <form>
+          <fieldset class="form-group col-sm">
+            <input type="text" placeholder="City" aria-label="Search" id="city" style="margin-right: 10px;">
+            <select id="state" data-dropup-auto="false">
+              <option value="">Choose a State</option>
+              <option value="AR">Arkansas</option>
+              <option value="GA">Georgia</option>
+            </select>
+          </fieldset>
+          <br>
+          <div class="advance-search-align">
+            <button type="button" class="advance-search-button" onclick="showAdvanced()"><p id="advanced-search">Advanced Search</p><i id="advanced-icon" class="bi bi-caret-down-fill" style="display: inline; padding-left: 10px; font-size: 14px;"></button></i>
+          </div>
+          <div id="advance-search-options" style="display: none">
+            <div class="row justify-content-center g-3">
+              <div class="col-md-4">
+                <label for="bedrooms" style="margin-bottom: 15px; margin-top: 10px;">Bedrooms</label>
+                  <input type="number" class="form-control" id="bedrooms" name="bedrooms" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" min="1" max="4">
+              </div>
+              <div class="col-md-4">
+                <label for="baths" style="margin-bottom: 15px; margin-top: 10px;">Bathrooms</label>
+                  <input type="number" class="form-control" id="baths" name="baths" min="1" max="4">
+              </div>
+            </div>
+           <br>
+           <label for="bedrooms" style="margin-bottom: 15px; margin-top: 10px;">Sort By:</label>
+            <select id="price" data-dropup-auto="false">
+              <option value="">Most Relevant</option>
+              <option value="asc">Price: Low to High</option>
+              <option value="desc">Price: High to Low</option>
+            </select> 
+           <br />   
+          </div> <br /> 
+          <button class="button" id="search" value="search" type="button"
+            onclick="findHome">Find Your Home
+        </button>
+      </form>
+        <p style="font-size: 12px; color: grey; margin-top: 10px; margin-bottom: 0;">* Results Calculated Below</p>
+      </div>
+  </div>
+</div>
+    <div class="container">
+      <div class="row">
+        <div id="cardsArea"></div>
+      </div>
+    </div>
+  
+    </div>
+  </body>
+</html>
+  <script type="text/javascript">
+
+  var validNumber = new RegExp(/^\d*\.?\d*$/);
+  var lastValid = document.getElementById("baths").value;
+
+  window.onload = function() {
+    findHome();
+  };
+    document.getElementById("search").addEventListener("click", findHome);
+
+    function showAdvanced() {
+      var x = document.getElementById("advance-search-options");
+      var icon = document.getElementById("advanced-icon");
+      var btn = document.getElementById("advanced-search");
+
+      if(x.style.display === "none"){
+        icon.classList.remove('bi-caret-down-fill');
+        icon.classList.add('bi-caret-up-fill');
+        x.style.display = "inline";   
+      }else{
+        icon.classList.remove('bi-caret-up-fill');
+        icon.classList.add('bi-caret-down-fill');
+        x.style.display = "none";
+      }
+    }
+
+    function findHome(e) {
+      var apiUrl = 'https://api.airtable.com/v0/apppFK3jcYmpupxXT/Listings?filterByFormula=AND({State}="' + state + '")';
+      var state = document.getElementById("state").value;
+      var searchButton = document.getElementById("search");
+      var bedrooms = document.getElementById("bedrooms").value;
+      var baths = document.getElementById("baths").value;
+      var price = document.getElementById("price").value;
+      var city = document.getElementById("city").value;
+
+      if(baths !== "" && bedrooms !== "" && price !== ""){ // price, bed, bath
+        apiUrl = 'https://api.airtable.com/v0/apppFK3jcYmpupxXT/Listings?filterByFormula=AND({State}="' + state + 
+        '",{Bedrooms}="' + bedrooms + '",{Baths}="' + baths +'")&sort[0][field]=Price&sort[0][direction]=' + price;
+      }else if (baths === "" && bedrooms === "" && price !== ""){ // price
+        apiUrl = 'https://api.airtable.com/v0/apppFK3jcYmpupxXT/Listings?filterByFormula=AND({State}="' + state +
+        '")&sort[0][field]=Price&sort[0][direction]=' + price;
+      }else if(baths === "" && bedrooms !== "" && price !== ""){ // price, bed
+        apiUrl = 'https://api.airtable.com/v0/apppFK3jcYmpupxXT/Listings?filterByFormula=AND({State}="' + state + 
+        '",{Bedrooms}="' + bedrooms + '")&sort[0][field]=Price&sort[0][direction]=' + price;
+      }else if(baths !== "" && bedrooms === "" && price !== ""){ // price, bath
+        apiUrl = 'https://api.airtable.com/v0/apppFK3jcYmpupxXT/Listings?filterByFormula=AND({State}="' + state + 
+        '",{Baths}="' + baths + '")&sort[0][field]=Price&sort[0][direction]=' + price;
+      }else if(baths === "" && bedrooms !== "" && price === ""){ // bed
+        apiUrl = 'https://api.airtable.com/v0/apppFK3jcYmpupxXT/Listings?filterByFormula=AND({State}="' + state + 
+        '",{Bedrooms}="' + bedrooms +'")';
+      }else if(baths !== "" && bedrooms !== "" && price === ""){ // bed, bath
+        apiUrl = 'https://api.airtable.com/v0/apppFK3jcYmpupxXT/Listings?filterByFormula=AND({State}="' + state + 
+        '",{Baths}="' + baths + '",{Bedrooms}="' + bedrooms +'")';
+      }else if(baths !== "" && bedrooms === "" && price === ""){ // bath
+        apiUrl = 'https://api.airtable.com/v0/apppFK3jcYmpupxXT/Listings?filterByFormula=AND({State}="' + state + 
+        '",{Baths}="' + baths +'")';
+      }else if(state !== "" && city !== ""){
+        apiUrl = 'https://api.airtable.com/v0/apppFK3jcYmpupxXT/Listings?filterByFormula=AND({State}="' + state +  '",{City}="'+  city + '")';
+      }else{
+        apiUrl = 'https://api.airtable.com/v0/apppFK3jcYmpupxXT/Listings';
+      }
+
+      searchButton.disabled = true;
+      searchButton.innerText = "Please Wait...";
+      searchButton.style.backgroundColor = "grey";
+
+      console.log(apiUrl);
+      fetch(apiUrl, {
+          "method": "GET",
+          "headers": {
+            "Host": "api.airtable.com",
+            "Authorization": "Bearer keyHoFL3RMdGwxdu0",
+          }
+        })
+        .then(function (response) {
+          if (response.status !== 200) {
+            searchButton.disabled = false;
+            searchButton.innerText = "Find Your Home";
+            errorHandle(3);
+          }
+          return response.json();
+        }).then(function (data) {
+          parseData(data);
+        }).then(function () {
+          searchButton.disabled = false;
+          searchButton.innerText = "Find Your Home";
+          searchButton.style.backgroundColor = "rgba(57, 181, 74, 1)";
+        })
+        .catch(err => {
+          console.log(err);
+          searchButton.disabled = false;
+          searchButton.innerText = "Find Your Home";
+          searchButton.style.backgroundColor = "rgba(57, 181, 74, 1)";
+          return;
+        });
+    }
+    function onImageButtonClick(clicked_id, searchResultStats) {
+
+      photos = "<div class='modal' tabindex='-1' role='dialog' id='myModal'><div class='modal-dialog' role='document'>";
+      photos += "<div class='modal-content'><div class='modal-header'><button type='button' style='border:none; background:none; font-size: 25px !important;' data-dismiss='modal' aria-label='Close'><span aria-hidden='false'>&times;</span></button>";
+      photos += "</div><div class='modal-body'>";
+      photos += "<div id='carousel-example-generic' class='carousel slide' data-ride='carousel'><div class='carousel-inner'>";
+
+      for(j = 0; j < JSON.parse(searchResultStats[clicked_id]).coverPhoto.length; j++){
+        if (j === 0) {
+          photos += "<div class='carousel-item active'><img class='d-block mw-100' src='" +  JSON.parse(searchResultStats[clicked_id]).coverPhoto[j] + "' alt='Photo'></div>";
+        } else {
+          photos += "<div class='carousel-item'><img class='d-block mw-100' src='" +  JSON.parse(searchResultStats[clicked_id]).coverPhoto[j] + "' alt='Photo'></div>";
+        }
+      }
+      photos += "<a class='carousel-control-prev' href='#carousel-example-generic' role='button' data-slide='prev'>";
+      photos += "<span class='carousel-control-prev-icon' aria-hidden='true'></span></a>";
+      photos += "<a class='carousel-control-next' href='#carousel-example-generic' role='button' data-slide='next'>";
+      photos += "<span class='carousel-control-next-icon' aria-hidden='true'></span></a>";
+      
+      photos += "</div></div></div></div>";
+
+      document.getElementById("photosArea").innerHTML = photos;
+    }
+  function parseData(data) {
+    var object = data.records;
+    var length = object.length;
+    var searchResultStats = [];
+
+    if (length === 0) {
+      errorHandle(3);
+      return;
+    }
+
+    for(i = 0; i<length; i++) {
+      var state = object[i].fields.State;
+      var city = object[i].fields.City;
+      var zip = object[i].fields.Zip;
+      var address = object[i].fields.Address + " " + city + ", " + state + " " + zip;
+      var status = object[i].fields.Status;
+      var sqft = object[i].fields.Sqft;
+      var baths = object[i].fields.Baths;
+      var bedrooms = object[i].fields.Bedrooms;
+      var price = object[i].fields.Price;
+      var lot = object[i].fields.Lotsize;
+      var description = object[i].fields.Notes;
+      var coverPhoto = [];
+
+      for(j = 0; j < object[i].fields.Pictures.length; j++){
+        coverPhoto.push(object[i].fields.Pictures[j].url);
+      }
+
+      var singleStats = {
+        zip: zip,
+        address: address,
+        price: price,
+        bedrooms: bedrooms,
+        baths: baths,
+        sqft: sqft,
+        status: status,
+        lot: lot,
+        description: description,
+        coverPhoto: coverPhoto,
+      };
+        searchResultStats.push(JSON.stringify(singleStats));
+    }
+    thelisthtml = "";
+    document.getElementById("cardsArea").innerHTML = "";
+
+    var inputState = document.getElementById("state").value;
+    var stateNoAb = "";
+
+    if(inputState === "GA"){
+      stateNoAb = "Georgia";
+    }else if(inputState === "AR"){
+      stateNoAb = "Arkansas";
+    }
+
+    if(inputState !== ""){
+      thelisthtml += "<h2 class='text-center'>" + "Showing results in " + stateNoAb + ".</h2>";
+    }else{
+      thelisthtml += "<h2 class='text-center'>" + "Showing all listings.</h2>";
+    }
+
+    thelisthtml += "<br><br><div class='container'>"
+    thelisthtml += "<div class='row'>"
+
+    photos = "";
+    document.getElementById("photosArea").innerHTML = "";
+
+    for (i = 0; i < length; i++) {
+      thelisthtml += "<div class='col-md'>"
+      thelisthtml += "<div class='card bg-light' style='width: 25rem;'>"
+      thelisthtml += "<img src=" + JSON.parse(searchResultStats[i]).coverPhoto[0] +" class='cardimg card - img - top img-rounded' style='height: 220px' alt='photo of listing'>"
+      thelisthtml += " <div class='card-body'>";
+      
+      if((JSON.parse(searchResultStats[i]).coverPhoto.length) > 1){
+        thelisthtml += `<button type='button' class='modal-button' data-toggle='modal' data-target='#myModal' onClick='onImageButtonClick(${i}, ${JSON.stringify(searchResultStats)})'>See More Photos</button>`;
+      }else{
+        thelisthtml += `<button type='button' class='modal-button' data-toggle='modal' data-target='#myModal' onClick='onImageButtonClick(${i}, ${JSON.stringify(searchResultStats)})'>Enlarge Photo</button>`;
+      }
+      thelisthtml += "<h5 class='card-title'>" + "Listing Price: <strong style='color:rgba(57, 181, 74, 1)'>$" + (JSON.parse(searchResultStats[i]).price).toLocaleString() +"</strong></h5>";
+      thelisthtml += "<p class='card-text'>" + JSON.parse(searchResultStats[i]).address + "</p></div>"
+      thelisthtml += "<ul class='list-group list-group-flush'>"
+      thelisthtml += "<li class='list-group-item'>" + "Number of Beds: " + JSON.parse(searchResultStats[i]).bedrooms +"</li>"
+      thelisthtml += "<li class='list-group-item'>" + "Number of Baths: " + JSON.parse(searchResultStats[i]).baths +"</li>"
+      thelisthtml += "<li class='list-group-item'>" + "Square Feet: " + JSON.parse(searchResultStats[i]).sqft + "</li>"
+      thelisthtml += "<li class='list-group-item'>" + "Status: " + JSON.parse(searchResultStats[i]).status + "</li>"
+      thelisthtml += "<li class='list-group-item'>" + "Lot Size: " + JSON.parse(searchResultStats[i]).lot + "</li></ul>"
+      thelisthtml += "<li class='list-group-item'>" +JSON.parse(searchResultStats[i]).description + "</li></ul>"
+      thelisthtml += " <div class='card-body' style='background-color: rgba(57, 181, 74, 1)'>";
+        thelisthtml += "<a href='https://www.zeropads.org/contact' target='_blank' style='text-decoration: none; color: white;'><p class='card-text' style='color: white; font-size: 20px; margin: 0;'>Interested in this home?</p>"
+      thelisthtml += "<p class='card-text' style='color: white; margin: 0'><strong>Contact Us</a></strong></p></div>"
+      thelisthtml+= "</div></div>";
+      
+      document.getElementById("cardsArea").innerHTML = thelisthtml;
+    }
+  }
+    function errorHandle(err) {
+      var searchButton = document.getElementById("search");
+      searchButton.disabled = false;
+      searchButton.innerText = "Search";
+      searchButton.style.backgroundColor = "rgba(57, 181, 74, 1)";
+      document.getElementById("state").value = "";
+      document.getElementById("cardsArea").innerHTML = " ";
+      var bedrooms = document.getElementById("bedrooms").value = "";
+      var baths = document.getElementById("baths").value = "";
+      var price = document.getElementById("price").value = "";
+      var i = document.getElementById("advanced-icon");
+      i.classList.remove('bi-caret-up-fill');
+      i.classList.add('bi-caret-down-fill');
+      var x = document.getElementById("advance-search-options");
+      x.style.display = "none";
+      
+      if (err == 1) {
+        alert(
+          "We're sorry, your results could not be calculated.  Please edit your filter and try again."
+        )
+      }
+      if (err == 2) {
+        alert(
+          "We're sorry, your results could not be calculated.  Please edit your filter and try again. In some cases, we may not have any homes available in the fields you provided"
+        )
+      }
+      if(err == 3){
+        alert(
+          "We're sorry, but no results were found to match your criteria. Please edit your filter and try again."
+        )
+      }
+    }
+  </script>
+</html>
