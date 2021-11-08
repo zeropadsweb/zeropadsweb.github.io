@@ -37,13 +37,13 @@ Contains form elements, populatest listings, and photo module. To add to the for
 
 Contains gathering form values, making API call, outputting results.
 
-![Screen Shot 2021-11-08 at 12 39 39 PM](https://user-images.githubusercontent.com/93229741/140791165-afa97dff-b1e5-43e5-9382-0638144c1fd6.png)
+![Screen Shot 21-11-08 at 12 39 18 PM](https://user-images.githubusercontent.com/93229741/140791125-805d4524-75fc-4c8f-bf2f-c725fbbb4cb5.png)
 To add (ex City), you must 1. add to API Call query
 
-![Screen Shot 2021-11-08 at 12 39 52 PM](https://user-images.githubusercontent.com/93229741/140791196-c2e81940-8816-400b-b34c-ed457964cdcc.png)
+![Screen Shot 2021-11-08 at 12 39 39 PM](https://user-images.githubusercontent.com/93229741/140791165-afa97dff-b1e5-43e5-9382-0638144c1fd6.png)
 2. gather information from API returned data
 
-![Screen Shot 21-11-08 at 12 39 18 PM](https://user-images.githubusercontent.com/93229741/140791125-805d4524-75fc-4c8f-bf2f-c725fbbb4cb5.png)
+![Screen Shot 2021-11-08 at 12 39 52 PM](https://user-images.githubusercontent.com/93229741/140791196-c2e81940-8816-400b-b34c-ed457964cdcc.png)
 3. and add it to the card information per listing
 
 ### CSS
