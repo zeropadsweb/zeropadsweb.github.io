@@ -30,7 +30,6 @@
           </div>
         <form>
           <fieldset class="form-group col-sm">
-            <input type="text" placeholder="City" aria-label="Search" id="city" style="margin-right: 10px;">
             <select id="state" data-dropup-auto="false">
               <option value="">Choose a State</option>
               <option value="AR">Arkansas</option>
@@ -111,7 +110,6 @@
       var bedrooms = document.getElementById("bedrooms").value;
       var baths = document.getElementById("baths").value;
       var price = document.getElementById("price").value;
-      var city = document.getElementById("city").value;
 
       if(baths !== "" && bedrooms !== "" && price !== ""){ // price, bed, bath
         apiUrl = 'https://api.airtable.com/v0/apppFK3jcYmpupxXT/Listings?filterByFormula=AND({State}="' + state + 
@@ -134,8 +132,8 @@
       }else if(baths !== "" && bedrooms === "" && price === ""){ // bath
         apiUrl = 'https://api.airtable.com/v0/apppFK3jcYmpupxXT/Listings?filterByFormula=AND({State}="' + state + 
         '",{Baths}="' + baths +'")';
-      }else if(state !== "" && city !== ""){
-        apiUrl = 'https://api.airtable.com/v0/apppFK3jcYmpupxXT/Listings?filterByFormula=AND({State}="' + state +  '",{City}="'+  city + '")';
+      }else if(state !== ""){
+        apiUrl = 'https://api.airtable.com/v0/apppFK3jcYmpupxXT/Listings?filterByFormula=AND({State}="' + state + '")';
       }else{
         apiUrl = 'https://api.airtable.com/v0/apppFK3jcYmpupxXT/Listings';
       }
