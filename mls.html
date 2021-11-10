@@ -28,6 +28,9 @@
         <div class="container">
             <div id="photosArea"></div>
           </div>
+          <div class="container">
+            <div id="detailsArea"></div>
+          </div>
         <form>
           <fieldset class="form-group col-sm">
             <select id="state" data-dropup-auto="false">
@@ -195,6 +198,17 @@
 
       document.getElementById("photosArea").innerHTML = photos;
     }
+
+    function onDetailsButtonClick(clicked_id, searchResultStats) {
+
+      details = "<div class='modal' tabindex='-1' role='dialog' id='detailsModal'><div class='modal-dialog' role='document'>";
+      details += "<div class='modal-content'><div class='modal-header'><strong>" + JSON.parse(searchResultStats[clicked_id]).address + "</strong><button type='button' style='border:none; background:none; font-size: 25px !important;' data-dismiss='modal' aria-label='Close'><span aria-hidden='false'>&times;</span></button>";
+      details += "</div><div class='modal-body'>";
+      details += "<div>" + JSON.parse(searchResultStats[clicked_id]).description + "</div>";
+      details += "</div></div></div></div>";
+
+      document.getElementById("detailsArea").innerHTML = details;
+}
   function parseData(data) {
     var object = data.records;
     var length = object.length;
@@ -280,9 +294,17 @@
       thelisthtml += "<li class='list-group-item'>" + "Square Feet: " + JSON.parse(searchResultStats[i]).sqft + "</li>"
       thelisthtml += "<li class='list-group-item'>" + "Status: " + JSON.parse(searchResultStats[i]).status + "</li>"
       thelisthtml += "<li class='list-group-item'>" + "Lot Size: " + JSON.parse(searchResultStats[i]).lot + "</li></ul>"
-      thelisthtml += "<li class='list-group-item'>" +JSON.parse(searchResultStats[i]).description + "</li></ul>"
+      
+      var description = JSON.stringify(JSON.parse(searchResultStats[i]).description);
+
+      if(description.length > 600){
+        var substring = description.substring(0, 600);
+        thelisthtml += "<li class='list-group-item'>" + substring + "..." + `<button type='button' class='details-button' data-toggle='modal' data-target='#detailsModal' onClick='onDetailsButtonClick(${i}, ${JSON.stringify(searchResultStats)})'>More Details</button>` + "</li></ul>";
+      }else{
+        thelisthtml += "<li class='list-group-item'>" + description + "</li></ul>"
+      }
       thelisthtml += " <div class='card-body' style='background-color: rgba(57, 181, 74, 1)'>";
-        thelisthtml += "<a href='https://www.zeropads.org/contact' target='_blank' style='text-decoration: none; color: white;'><p class='card-text' style='color: white; font-size: 20px; margin: 0;'>Interested in this home?</p>"
+      thelisthtml += "<a href='https://www.zeropads.org/contact' target='_blank' style='text-decoration: none; color: white;'><p class='card-text' style='color: white; font-size: 20px; margin: 0;'>Interested in this home?</p>"
       thelisthtml += "<p class='card-text' style='color: white; margin: 0'><strong>Contact Us</a></strong></p></div>"
       thelisthtml+= "</div></div>";
       
