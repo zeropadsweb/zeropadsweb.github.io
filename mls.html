@@ -107,7 +107,7 @@
     }
 
     function findHome(e) {
-      var apiUrl = 'https://api.airtable.com/v0/apppFK3jcYmpupxXT/Listings?filterByFormula=AND({State}="' + state + '")';
+      var apiUrl = 'https://api.airtable.com/v0/apppFK3jcYmpupxXT/Listings?filterByFormula=AND({Status}="Available",{State}="' + state + '")';
       var state = document.getElementById("state").value;
       var searchButton = document.getElementById("search");
       var bedrooms = document.getElementById("bedrooms").value;
@@ -115,30 +115,30 @@
       var price = document.getElementById("price").value;
 
       if(baths !== "" && bedrooms !== "" && price !== ""){ // price, bed, bath
-        apiUrl = 'https://api.airtable.com/v0/apppFK3jcYmpupxXT/Listings?filterByFormula=AND({State}="' + state + 
+        apiUrl = 'https://api.airtable.com/v0/apppFK3jcYmpupxXT/Listings?filterByFormula=AND({Status}="Available",{State}="' + state + 
         '",{Bedrooms}="' + bedrooms + '",{Baths}="' + baths +'")&sort[0][field]=Price&sort[0][direction]=' + price;
       }else if (baths === "" && bedrooms === "" && price !== ""){ // price
-        apiUrl = 'https://api.airtable.com/v0/apppFK3jcYmpupxXT/Listings?filterByFormula=AND({State}="' + state +
+        apiUrl = 'https://api.airtable.com/v0/apppFK3jcYmpupxXT/Listings?filterByFormula=AND({Status}="Available",{State}="' + state +
         '")&sort[0][field]=Price&sort[0][direction]=' + price;
       }else if(baths === "" && bedrooms !== "" && price !== ""){ // price, bed
-        apiUrl = 'https://api.airtable.com/v0/apppFK3jcYmpupxXT/Listings?filterByFormula=AND({State}="' + state + 
+        apiUrl = 'https://api.airtable.com/v0/apppFK3jcYmpupxXT/Listings?filterByFormula=AND({Status}="Available",{State}="' + state + 
         '",{Bedrooms}="' + bedrooms + '")&sort[0][field]=Price&sort[0][direction]=' + price;
       }else if(baths !== "" && bedrooms === "" && price !== ""){ // price, bath
-        apiUrl = 'https://api.airtable.com/v0/apppFK3jcYmpupxXT/Listings?filterByFormula=AND({State}="' + state + 
+        apiUrl = 'https://api.airtable.com/v0/apppFK3jcYmpupxXT/Listings?filterByFormula=AND({Status}="Available",{State}="' + state + 
         '",{Baths}="' + baths + '")&sort[0][field]=Price&sort[0][direction]=' + price;
       }else if(baths === "" && bedrooms !== "" && price === ""){ // bed
-        apiUrl = 'https://api.airtable.com/v0/apppFK3jcYmpupxXT/Listings?filterByFormula=AND({State}="' + state + 
+        apiUrl = 'https://api.airtable.com/v0/apppFK3jcYmpupxXT/Listings?filterByFormula=AND({Status}="Available",{State}="' + state + 
         '",{Bedrooms}="' + bedrooms +'")';
       }else if(baths !== "" && bedrooms !== "" && price === ""){ // bed, bath
-        apiUrl = 'https://api.airtable.com/v0/apppFK3jcYmpupxXT/Listings?filterByFormula=AND({State}="' + state + 
+        apiUrl = 'https://api.airtable.com/v0/apppFK3jcYmpupxXT/Listings?filterByFormula=AND({Status}="Available",{State}="' + state + 
         '",{Baths}="' + baths + '",{Bedrooms}="' + bedrooms +'")';
       }else if(baths !== "" && bedrooms === "" && price === ""){ // bath
-        apiUrl = 'https://api.airtable.com/v0/apppFK3jcYmpupxXT/Listings?filterByFormula=AND({State}="' + state + 
+        apiUrl = 'https://api.airtable.com/v0/apppFK3jcYmpupxXT/Listings?filterByFormula=AND({Status}="Available",{State}="' + state + 
         '",{Baths}="' + baths +'")';
       }else if(state !== ""){
-        apiUrl = 'https://api.airtable.com/v0/apppFK3jcYmpupxXT/Listings?filterByFormula=AND({State}="' + state + '")';
+        apiUrl = 'https://api.airtable.com/v0/apppFK3jcYmpupxXT/Listings?filterByFormula=AND({Status}="Available",{State}="' + state + '")';
       }else{
-        apiUrl = 'https://api.airtable.com/v0/apppFK3jcYmpupxXT/Listings';
+        apiUrl = 'https://api.airtable.com/v0/apppFK3jcYmpupxXT/Listings?filterByFormula=AND({Status}="Available")';
       }
 
       searchButton.disabled = true;
