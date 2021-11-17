@@ -161,6 +161,7 @@
           }
           return response.json();
         }).then(function (data) {
+          console.log(data)
           parseData(data);
         }).then(function () {
           searchButton.disabled = false;
@@ -190,7 +191,7 @@
         }
       }
       photos += "<a class='carousel-control-prev' href='#carousel-example-generic' role='button' data-slide='prev'>";
-      photos += "<span class='carousel-control-prev-icon' aria-hidden='true'></span></a>";
+      photos += "<span class='carousel-control-prev-icon' style='color: rgba(57, 181, 74, 1)' aria-hidden='true'></span></a>";
       photos += "<a class='carousel-control-next' href='#carousel-example-generic' role='button' data-slide='next'>";
       photos += "<span class='carousel-control-next-icon' aria-hidden='true'></span></a>";
       
@@ -230,11 +231,24 @@
       var bedrooms = object[i].fields.Bedrooms;
       var price = object[i].fields.Price;
       var lot = object[i].fields.Lotsize;
-      var description = object[i].fields.Notes;
+      var description;
       var coverPhoto = [];
 
-      for(j = 0; j < object[i].fields.Pictures.length; j++){
+      var hasPhotos = object[i].fields.hasOwnProperty('Pictures');
+      var hasDescription = object[i].fields.hasOwnProperty('Notes');
+
+      if(!hasPhotos){
+        coverPhoto[0] = "https://github.com/zeropadsweb/zeropadsweb.github.io/blob/main/coverPhoto.jpg?raw=true";
+      }else{
+        for(j = 0; j < object[i].fields.Pictures.length; j++){
         coverPhoto.push(object[i].fields.Pictures[j].url);
+        }
+      }
+
+      if(!hasDescription){
+        description = "More details coming soon."
+      }else{
+        description = object[i].fields.Notes;
       }
 
       var singleStats = {
@@ -264,9 +278,9 @@
     }
 
     if(inputState !== ""){
-      thelisthtml += "<h2 class='text-center'>" + "Showing results in " + stateNoAb + ".</h2>";
+      thelisthtml += "<h2 class='text-center'>" + "Showing available results in " + stateNoAb + ".</h2>";
     }else{
-      thelisthtml += "<h2 class='text-center'>" + "Showing all listings.</h2>";
+      thelisthtml += "<h2 class='text-center'>" + "Showing all available listings.</h2>";
     }
 
     thelisthtml += "<br><br><div class='container'>"
@@ -299,9 +313,9 @@
 
       if(description.length > 600){
         var substring = description.substring(0, 600);
-        thelisthtml += "<li class='list-group-item'>" + substring + "..." + `<button type='button' class='details-button' data-toggle='modal' data-target='#detailsModal' onClick='onDetailsButtonClick(${i}, ${JSON.stringify(searchResultStats)})'>More Details</button>` + "</li></ul>";
+        thelisthtml += "<li class='list-group-item'>" + substring.replace(/\"/g, "") + "..." + `<button type='button' class='details-button' data-toggle='modal' data-target='#detailsModal' onClick='onDetailsButtonClick(${i}, ${JSON.stringify(searchResultStats)})'>More Details</button>` + "</li></ul>";
       }else{
-        thelisthtml += "<li class='list-group-item'>" + description + "</li></ul>"
+        thelisthtml += "<li class='list-group-item'>" + description.replace(/\"/g, "") + "</li></ul>"
       }
       thelisthtml += " <div class='card-body' style='background-color: rgba(57, 181, 74, 1)'>";
       thelisthtml += "<a href='https://www.zeropads.org/contact' target='_blank' style='text-decoration: none; color: white;'><p class='card-text' style='color: white; font-size: 20px; margin: 0;'>Interested in this home?</p>"
